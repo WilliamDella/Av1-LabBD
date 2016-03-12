@@ -10,7 +10,7 @@ CREATE TABLE escola_de_samba
 (
 	id_escola INT PRIMARY KEY,
 	nome VARCHAR(100),
-	total_de_pontos DECIMAL(7,2)
+	total_de_pontos DECIMAL(4,1)
 )
 
 INSERT INTO escola_de_samba VALUES
@@ -55,37 +55,37 @@ CREATE TABLE jurado
 )
 
 INSERT INTO jurado VALUES
-	(1, 'Marcos Rocha'),
-	(2, 'Giovana Souza'),
-	(3, 'Alfredo Travassos'),
-	(4, 'Anna Barros'),
-	(5, 'Belmiro Macedo'),
-	(6, 'Evelyn Gonçalves'),
-	(7, 'Cauê Pajares'),
-	(8, 'Bianca Carvalho'),
-	(9, 'Cosme Bezerril'),
-	(10, 'Matilde Ribeiro'),
-	(11, 'Cássio Varanda'),
-	(12, 'Almerinda Ruas'),
-	(13, 'Delfim Cesário'),
-	(14, 'Bibiana Cezimbra'),
-	(15, 'Ferdinando Caldeira'),
-	(16, 'Dorotéia Vilela'),
-	(17, 'Filipe Tabalipa'),
-	(18, 'Giovana Cayado'),
-	(19, 'Guilherme Hidalgo'),
-	(20, 'Teresa Freyria'),
-	(21, 'Jaime Capucho'),
-	(22, 'Virgília Foquiço'),
-	(23, 'Martinho Peroba'),
-	(24, 'Emília Leitão'),
-	(25, 'Mauro Dias'),
-	(26, 'Gerusa Mortágua'),
-	(27, 'Hermenegildo Pereira'),
-	(28, 'Isadora Toledo'),
-	(29, 'Adérito Nunes'),
-	(30, 'Rosália Pereira'),
-	(31, 'Xerxes Coitinho')
+	(1, 'Marcos Rocha Azevedo'),
+	(2, 'Giovana Souza Martins'),
+	(3, 'Alfredo Travassos Costa'),
+	(4, 'Anna Barros Souza'),
+	(5, 'Belmiro Macedo Carvalho'),
+	(6, 'Evelyn Gonçalves Ribeiro'),
+	(7, 'Cauê Pajares Ribeiro'),
+	(8, 'Bianca Carvalho de Lima'),
+	(9, 'Cosme Alves Bezerril'),
+	(10, 'Matilde Ribeiro Almeida'),
+	(11, 'Cássio Varanda Nascimento'),
+	(12, 'Almerinda Ruas Bonfim'),
+	(13, 'Delfim Cesário Alencar'),
+	(14, 'Bibiana Cezimbra Correia'),
+	(15, 'Ferdinando Caldeira da Silva'),
+	(16, 'Dorotéia Dias Vilela'),
+	(17, 'Filipe Tabalipa de Oliveira'),
+	(18, 'Giovana de Araújo Cayado'),
+	(19, 'Guilherme Hidalgo Rodrigues'),
+	(20, 'Teresa Freyria Pinto'),
+	(21, 'Jaime José Capucho'),
+	(22, 'Virgília Boaventura Foquiço'),
+	(23, 'Martinho de Francisco Peroba'),
+	(24, 'Emília Leitão Harris'),
+	(25, 'Mauro Dias Gonzalez'),
+	(26, 'Gerusa Cardoso Mortágua'),
+	(27, 'Hermenegildo Melo Pereira'),
+	(28, 'Isadora Toledo Souza'),
+	(29, 'Adérito Ferreira Nunes'),
+	(30, 'Rosália Pereira Santos'),
+	(31, 'Xerxes Coitinho Almeida')
 
 /*
 Eles julgarão um ou mais quesitos e, precisa-se saber, para o quesito
@@ -169,125 +169,125 @@ a menor descartada, a maior descartada e a nota total
 CREATE TABLE comissao_de_frente
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE evolucao
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE fantasia
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE bateria
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE alegoria
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE harmonia
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE samba_enredo
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE mestre_sala_e_porta_bandeira
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
 CREATE TABLE enredo
 (
 	id_escola INT PRIMARY KEY,
-	nota1 DECIMAL(7,2),
-	nota2 DECIMAL(7,2),
-	nota3 DECIMAL(7,2),
-	nota4 DECIMAL(7,2),
-	nota5 DECIMAL(7,2),
-	menor_descartada DECIMAL(7,2),
-	maior_descartada DECIMAL(7,2),
-	nota_total DECIMAL(7,2)
+	nota1 DECIMAL(4,1),
+	nota2 DECIMAL(4,1),
+	nota3 DECIMAL(4,1),
+	nota4 DECIMAL(4,1),
+	nota5 DECIMAL(4,1),
+	menor_descartada DECIMAL(4,1),
+	maior_descartada DECIMAL(4,1),
+	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
