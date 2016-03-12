@@ -71,6 +71,8 @@ public class TelaApuracao extends JFrame implements ActionListener {
 					frame.setVisible(true);
 					// Comando para centralização da tela
 					frame.setLocationRelativeTo(null);
+					// Comando para não permitir a maximização da tela
+					frame.setResizable(false);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -196,9 +198,10 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			}			
 		} else if (comando.equals("Ver Quesito")) {
 			// Cria uma nova janela e configura o título de acordo com o quesito em apuração
-			TelaVerQuesito tvq = new TelaVerQuesito(cbbxQuesitos.getSelectedItem().toString());
+			TelaVerQuesito tvq = new TelaVerQuesito(quesitos.get(contador3).toString());
 			tvq.setVisible(true);
 			tvq.setLocationRelativeTo(null);
+			tvq.setResizable(false);
 		} else if (comando.equals("Ver Total")) {
 			System.out.println("Clicou em ver total, estará pronto logo, logo!");
 		}
