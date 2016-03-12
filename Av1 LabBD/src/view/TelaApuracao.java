@@ -126,10 +126,12 @@ public class TelaApuracao extends JFrame implements ActionListener {
 		txtNota.setColumns(10);
 		
 		btnVerQuesito = new JButton("Ver Quesito");
+		btnVerQuesito.addActionListener(this);
 		btnVerQuesito.setBounds(196, 234, 113, 28);
 		contentPane.add(btnVerQuesito);
 		
 		btnVerTotal = new JButton("Ver Total");
+		btnVerTotal.addActionListener(this);
 		btnVerTotal.setBounds(321, 234, 113, 28);
 		contentPane.add(btnVerTotal);
 		
@@ -143,36 +145,62 @@ public class TelaApuracao extends JFrame implements ActionListener {
 		String comando = evento.getActionCommand();
 		// Verifica se o botão inserir foi pressionado
 		if (comando.equals("Inserir")) {
-			/*
-			 * Descrição dos contadores:
-			 * 
-			 * contador -> faz o loop do nome das escolas de samba no cbbxEscolas
-			 * contador2 -> faz o loop das 5 notas para cada quesito
-			 * contador3 -> faz o loop do nome dos quesitos no cbbxQuesitos 
-			 * contador4 -> faz o loop do nome dos jurados no cbbxJurados
-			 */
-			contador++;	
-			cbbxEscolas.setSelectedIndex(contador);
-			if (contador == 13) {
-				contador = - 1;
-				// If que define o término da apuração
-				if (contador == -1 && contador2 == 4 && contador3 == 8) {
-					JOptionPane.showMessageDialog(null, "A apuração acabou!");
-					btnInserir.setEnabled(false);
+			double nota = 0;
+			// Verifica se o campo nota está vazio
+			if (txtNota.getText().equals("")) {
+				JOptionPane.showMessageDialog(null, "O campo nota não pode estar vazio!",
+						"ERRO", JOptionPane.ERROR_MESSAGE);
+			} else {
+				nota = Double.parseDouble(txtNota.getText());
+				// Verifica se a nota está no intervalo de 5.0 à 10.0
+				if (nota < 5.0 || nota > 10.0) {
+					JOptionPane.showMessageDialog(null, "Nota inválida!\n\n"
+							+ "Digite outra nota novamente!\n\n"
+							+ "OBS: Notas devem estar no intervalo de 5.0 à 10.0.", 
+							"ERRO", JOptionPane.ERROR_MESSAGE);	
+					txtNota.setText("");
+				} else {
+					nota = Double.parseDouble(txtNota.getText());
+					txtNota.setText("");
+					/*
+					 * Descrição dos contadores:
+					 * 
+					 * contador -> faz o loop do nome das escolas de samba no cbbxEscolas
+					 * contador2 -> faz o loop das 5 notas para cada quesito
+					 * contador3 -> faz o loop do nome dos quesitos no cbbxQuesitos 
+					 * contador4 -> faz o loop do nome dos jurados no cbbxJurados
+					 */
+					contador++;	
+					cbbxEscolas.setSelectedIndex(contador);
+					if (contador == 13) {
+						contador = - 1;
+						// If que define o término da apuração
+						if (contador == -1 && contador2 == 4 && contador3 == 8) {
+							JOptionPane.showMessageDialog(null, "A apuração acabou!");
+							btnInserir.setEnabled(false);
+						}
+					} else if(contador == 0) {
+						contador2++;
+						contador4++;
+						cbbxJurados.setSelectedIndex(contador4);
+						if (contador2 == 5) {
+							contador2 = 0;
+							contador3++;
+							cbbxQuesitos.setSelectedIndex(contador3);
+						}
+					}	
+					// Printa no console a situação atual dos contadores 
+					System.out.println("cont1 = " + contador + " | cont2 = " + contador2 + " | cont3 = " + contador3 + 
+							" | cont4 = " + contador4);
 				}
-			} else if(contador == 0) {
-				contador2++;
-				contador4++;
-				cbbxJurados.setSelectedIndex(contador4);
-				if (contador2 == 5) {
-					contador2 = 0;
-					contador3++;
-					cbbxQuesitos.setSelectedIndex(contador3);
-				}
-			}	
-			// Printa no console a situação atual dos contadores 
-			System.out.println("cont1 = " + contador + " | cont2 = " + contador2 + " | cont3 = " + contador3 + 
-					" | cont4 = " + contador4);
+			}			
+		} else if (comando.equals("Ver Quesito")) {
+			// Cria uma nova janela e configura o título de acordo com o quesito em apuração
+			TelaVerQuesito tvq = new TelaVerQuesito(cbbxQuesitos.getSelectedItem().toString());
+			tvq.setVisible(true);
+			tvq.setLocationRelativeTo(null);
+		} else if (comando.equals("Ver Total")) {
+			System.out.println("Clicou em ver total, estará pronto logo, logo!");
 		}
 	}
 	
