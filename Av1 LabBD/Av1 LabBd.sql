@@ -72,7 +72,7 @@ INSERT INTO jurado VALUES
 	(15, 'Ferdinando Caldeira da Silva'),
 	(16, 'Dorotéia Dias Vilela'),
 	(17, 'Filipe Tabalipa de Oliveira'),
-	(18, 'Giovana de Araújo Cayado'),
+	(18, 'Giuliana de Araújo Cayado'),
 	(19, 'Guilherme Hidalgo Rodrigues'),
 	(20, 'Teresa Freyria Pinto'),
 	(21, 'Jaime José Capucho'),
@@ -85,8 +85,22 @@ INSERT INTO jurado VALUES
 	(28, 'Isadora Toledo Souza'),
 	(29, 'Adérito Ferreira Nunes'),
 	(30, 'Rosália Pereira Santos'),
-	(31, 'Xerxes Coitinho Almeida')
-
+	(31, 'Xerxes Coitinho Almeida'),
+	(32, 'Berengária Ferraço da Silva'),
+	(33, 'Brígida Romero Almeyda'),
+	(34, 'Burtira Farias Lagos'),
+	(35, 'Claudemira Távora Holanda'),
+	(36, 'Cátia Carvalheiro Fagundes'),
+	(37, 'Melissa Cerveira Cavalcante'),
+	(38, 'Mônica Ximenes Neto'),
+	(39, 'Neusa Quinterno Bolaños'),
+	(40, 'Paulo Malheiros Filho'),
+	(41, 'Sabino Malheiro Coimbra'),
+	(42, 'Valentina Chávez Jr'),
+	(43, 'Victor Seabra Maldonado'),
+	(44, 'Enilda Otero Gumercindo'),
+	(45, 'Liliana Frois Godói')
+	
 /*
 Eles julgarão um ou mais quesitos e, precisa-se saber, para o quesito
 que o jurado julgará, se ele é o 1º, 2º, 3º, 4º ou 5º jurado
@@ -103,58 +117,58 @@ CREATE TABLE quesito_jurado
 
 INSERT INTO quesito_jurado VALUES
 	(1, 1, 2),
-	(1, 5, 1),
-	(1, 6, 5), -- 1º quesito
-	(1, 30, 4),
-	(1, 18, 3),
+	(1, 3, 1),
+	(1, 5, 5), -- 1º quesito
+	(1, 7, 4),
+	(1, 9, 3),
 	-------------
 	(2, 2, 1),
-	(2, 8, 5),
-	(2, 13, 3), -- 2º quesito
-	(2, 16, 2),
-	(2, 4, 4),
+	(2, 4, 5),
+	(2, 6, 3), -- 2º quesito
+	(2, 8, 2),
+	(2, 10, 4),
 	-------------
-	(3, 15, 4),
-	(3, 24, 2),
-	(3, 28, 5), -- 3º quesito
-	(3, 9, 1),
-	(3, 17, 3),
+	(3, 11, 4),
+	(3, 13, 2),
+	(3, 15, 5), -- 3º quesito
+	(3, 17, 1),
+	(3, 19, 3),
 	-------------
-	(4, 7, 3),
-	(4, 18, 5),
-	(4, 4, 2), -- 4º quesito
-	(4, 21, 1),
-	(4, 29, 4),
+	(4, 12, 3),
+	(4, 14, 5),
+	(4, 16, 2), -- 4º quesito
+	(4, 18, 1),
+	(4, 20, 4),
 	-------------
-	(5, 14, 5),
-	(5, 1, 2),
-	(5, 19, 3), -- 5º quesito
-	(5, 8, 1),
-	(5, 11, 4),
+	(5, 21, 5),
+	(5, 23, 2),
+	(5, 25, 3), -- 5º quesito
+	(5, 27, 1),
+	(5, 29, 4),
 	-------------
-	(6, 3, 3),
-	(6, 5, 5),
-	(6, 8, 1), -- 6º quesito
-	(6, 22, 4),
-	(6, 26, 2),
+	(6, 22, 3),
+	(6, 24, 5),
+	(6, 26, 1), -- 6º quesito
+	(6, 28, 4),
+	(6, 30, 2),
 	-------------
-	(7, 27, 2),
-	(7, 31, 1),
-	(7, 28, 4), -- 7º quesito
-	(7, 13, 3),
-	(7, 25, 5),
+	(7, 31, 2),
+	(7, 33, 1),
+	(7, 35, 4), -- 7º quesito
+	(7, 37, 3),
+	(7, 39, 5),
 	-------------
-	(8, 23, 1),
-	(8, 3, 3),
-	(8, 10, 5), -- 8º quesito
-	(8, 16, 4),
-	(8, 20, 2),
+	(8, 32, 1),
+	(8, 34, 3),
+	(8, 36, 5), -- 8º quesito
+	(8, 38, 4),
+	(8, 40, 2),
 	-------------
-	(9, 12, 4), 
-	(9, 8, 5),
-	(9, 25, 1), -- 9º quesito
-	(9, 31, 2),
-	(9, 28, 3)
+	(9, 41, 4), 
+	(9, 43, 5),
+	(9, 45, 1), -- 9º quesito
+	(9, 42, 2),
+	(9, 44, 3)
 	
 -- Select para agrupar as escolas de samba por quesito e ordenar os jurados pela ordem de julgamento
 SELECT j.nome FROM quesito_jurado qj

@@ -1,5 +1,6 @@
 package view;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -22,6 +23,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import dao.GenericDAO;
+import java.awt.Font;
 
 public class TelaApuracao extends JFrame implements ActionListener {
 
@@ -85,58 +87,68 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	public TelaApuracao() {
 		super("Apuração");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 483, 320);
+		setBounds(100, 100, 523, 320);		
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
 		JLabel lblEscola = new JLabel("Escola");
-		lblEscola.setBounds(26, 30, 46, 14);
+		lblEscola.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblEscola.setBounds(39, 30, 46, 14);
 		contentPane.add(lblEscola);
 		
 		cbbxEscolas = new JComboBox<String>();
-		cbbxEscolas.setBounds(82, 26, 358, 22);
+		cbbxEscolas.setBackground(new Color(26, 188, 156));
+		cbbxEscolas.setBounds(115, 26, 358, 22);
 		contentPane.add(cbbxEscolas);
 		
 		btnInserir = new JButton("Inserir");
+		btnInserir.setBackground(new Color(230, 126, 34));
 		btnInserir.addActionListener(this);
-		btnInserir.setBounds(196, 194, 113, 28);
+		btnInserir.setBounds(229, 194, 113, 28);
 		contentPane.add(btnInserir);
 		
 		JLabel lblQuesito = new JLabel("Quesito");
-		lblQuesito.setBounds(26, 110, 46, 14);
+		lblQuesito.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblQuesito.setBounds(39, 110, 78, 14);
 		contentPane.add(lblQuesito);
 		
 		cbbxQuesitos = new JComboBox<String>();
-		cbbxQuesitos.setBounds(82, 106, 358, 22);
+		cbbxQuesitos.setBackground(new Color(26, 188, 156));
+		cbbxQuesitos.setBounds(115, 106, 358, 22);
 		contentPane.add(cbbxQuesitos);		
 		
 		JLabel lblJurado = new JLabel("Jurado");
-		lblJurado.setBounds(26, 68, 55, 16);
+		lblJurado.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblJurado.setBounds(39, 71, 55, 16);
 		contentPane.add(lblJurado);
 		
 		cbbxJurados = new JComboBox<String>();
-		cbbxJurados.setBounds(82, 68, 358, 22);
+		cbbxJurados.setBackground(new Color(26, 188, 156));
+		cbbxJurados.setBounds(115, 68, 358, 22);
 		contentPane.add(cbbxJurados);
 		
 		JLabel lblNota = new JLabel("Nota");
-		lblNota.setBounds(26, 200, 55, 16);
+		lblNota.setFont(new Font("SansSerif", Font.BOLD, 13));
+		lblNota.setBounds(50, 200, 55, 16);
 		contentPane.add(lblNota);
 		
 		txtNota = new JTextField();
-		txtNota.setBounds(70, 194, 91, 28);
+		txtNota.setBounds(103, 194, 91, 28);
 		contentPane.add(txtNota);
 		txtNota.setColumns(10);
 		
 		btnVerQuesito = new JButton("Ver Quesito");
+		btnVerQuesito.setBackground(new Color(52, 152, 219));
 		btnVerQuesito.addActionListener(this);
-		btnVerQuesito.setBounds(196, 234, 113, 28);
+		btnVerQuesito.setBounds(229, 234, 113, 28);
 		contentPane.add(btnVerQuesito);
 		
 		btnVerTotal = new JButton("Ver Total");
+		btnVerTotal.setBackground(new Color(52, 152, 219));
 		btnVerTotal.addActionListener(this);
-		btnVerTotal.setBounds(321, 234, 113, 28);
+		btnVerTotal.setBounds(354, 234, 113, 28);
 		contentPane.add(btnVerTotal);
 		
 		carregarEscolas();
