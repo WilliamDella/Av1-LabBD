@@ -3,6 +3,7 @@ package view;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,12 +16,12 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import dao.GenericDAO;
-import javax.swing.JTextField;
 
 public class TelaApuracao extends JFrame implements ActionListener {
 
@@ -31,7 +32,8 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	// Botão que vai inserir as notas das escolas no banco de dados
 	private JButton btnInserir; 
 	// Contadores para controlar a passagem dos quesitos e dos jurados
-	private static int contador = 0, contador2 = 0, contador3 = 0, contador4 = 0;
+	private static int contador = 0, contador2 = 0, contador3 = 0,
+					   contador4 = 0, contador5 = 1, contador6 = 0;
 	// Lista que vai conter os dados da tabela escola_de_samba para serem carregados para o ComboBox - cbbxEscolas
 	private static List<String> escolas = new ArrayList<String>();
 	// Classe que faz a conexão com o banco de dados av1_lab_bd
@@ -171,8 +173,12 @@ public class TelaApuracao extends JFrame implements ActionListener {
 					 * contador2 -> faz o loop das 5 notas para cada quesito
 					 * contador3 -> faz o loop do nome dos quesitos no cbbxQuesitos 
 					 * contador4 -> faz o loop do nome dos jurados no cbbxJurados
+					 * contador5 -> faz o loop do id dos quesitos
 					 */
-					contador++;	
+					
+					contador6++;
+					contador++;					
+					
 					cbbxEscolas.setSelectedIndex(contador);
 					if (contador == 13) {
 						contador = - 1;
@@ -180,20 +186,44 @@ public class TelaApuracao extends JFrame implements ActionListener {
 						if (contador == -1 && contador2 == 4 && contador3 == 8) {
 							JOptionPane.showMessageDialog(null, "A apuração acabou!");
 							btnInserir.setEnabled(false);
-						}
-					} else if(contador == 0) {
+						}					
+					} else if(contador == 0) {							
+						contador4++;					
+						cbbxJurados.setSelectedIndex(contador4);				
+					}					
+					
+					if (contador5 == 15) {
+						contador5 = 1;
 						contador2++;
-						contador4++;
-						cbbxJurados.setSelectedIndex(contador4);
-						if (contador2 == 5) {
-							contador2 = 0;
-							contador3++;
-							cbbxQuesitos.setSelectedIndex(contador3);
-						}
-					}	
+					}					
+					
 					// Printa no console a situação atual dos contadores 
 					System.out.println("cont1 = " + contador + " | cont2 = " + contador2 + " | cont3 = " + contador3 + 
-							" | cont4 = " + contador4);
+							" | cont4 = " + contador4 + " | cont5 = " + contador5 + " | cont6 = " + contador6);				
+					
+					/*
+					 * Faz a chamada da stored procedure sp_apuracao
+					 */
+					String sqlCall = "{call sp_apuracao(?,?,?,?)}";
+					try {
+						CallableStatement cs = generic.getConnection().prepareCall(sqlCall);
+						cs.setInt(1, contador3);
+						cs.setInt(2, contador5);
+						cs.setDouble(3, nota);
+						cs.setInt(4, contador2);
+						cs.execute();
+					} catch (SQLException e) {
+						e.printStackTrace();
+					}
+					
+					if (contador6 == 70) {
+						contador6 = 0;
+						contador3++;
+						cbbxQuesitos.setSelectedIndex(contador3);
+						contador2 = -1;
+					}
+					
+					contador5++;
 				}
 			}			
 		} else if (comando.equals("Ver Quesito")) {
@@ -244,6 +274,7 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	}
 	
 	public static void carregarJurados(){
+		// Pensar em dar um SELECT em uma VIEW?
 		String sql = "SELECT jurado.nome FROM quesito_jurado " +
 				"INNER JOIN jurado " +
 				"ON quesito_jurado.id_jurado = jurado.id_jurado " +

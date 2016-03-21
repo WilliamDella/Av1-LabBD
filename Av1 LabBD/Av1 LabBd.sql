@@ -291,3 +291,153 @@ CREATE TABLE enredo
 	nota_total DECIMAL(4,1)
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
+
+--DROP PROCEDURE sp_apuracao
+
+/*
+Dois blocos à seguir são para definir quais são a maior e menor notas 
+à serem descartadas
+*/
+UPDATE comissao_de_frente
+SET menor_descartada = (select min(valores.menor_valor)
+from
+(select nota1 menor_valor from comissao_de_frente
+union all
+select nota2 menor_valor from comissao_de_frente
+union all
+select nota3 menor_valor from comissao_de_frente) as valores)
+WHERE id_escola = 1
+
+UPDATE comissao_de_frente
+SET maior_descartada = (select max(valores.menor_valor)
+from
+(select nota1 menor_valor from comissao_de_frente
+union all
+select nota2 menor_valor from comissao_de_frente
+union all
+select nota3 menor_valor from comissao_de_frente) as valores)
+WHERE id_escola = 1
+
+SELECT escola_de_samba.nome, nota1,
+	   nota2, nota3, nota4, nota5,
+	   menor_descartada, maior_descartada,
+	   nota_total
+FROM comissao_de_frente
+INNER JOIN escola_de_samba
+ON comissao_de_frente.id_escola = escola_de_samba.id_escola
+
+CREATE PROCEDURE sp_apuracao (@id_quesito INT, @id_escola INT,
+		 @nota DECIMAL(4,1), @contador_nota INT)
+AS
+DECLARE @menor_descartada AS DECIMAL(4,1), @maior_descartada AS DECIMAL(4,1),
+		@nota_total AS DECIMAL(4,1), @total_de_pontos AS DECIMAL(4,1),
+		@tabela AS VARCHAR(30), @query AS VARCHAR(MAX)
+									
+-- Verificando qual o quesito atual
+IF(@id_quesito = 0)
+BEGIN
+	SET @tabela = 'comissao_de_frente'
+END
+ELSE IF(@id_quesito = 1)
+BEGIN
+	SET @tabela = 'evolucao'
+END
+ELSE IF(@id_quesito = 2)
+BEGIN
+	SET @tabela = 'fantasia'
+END
+ELSE IF(@id_quesito = 3)
+BEGIN
+	SET @tabela = 'bateria'
+END
+ELSE IF(@id_quesito = 4)
+BEGIN
+	SET @tabela = 'alegoria'
+END
+ELSE IF(@id_quesito = 5)
+BEGIN
+	SET @tabela = 'harmonia'
+END
+ELSE IF(@id_quesito = 6)
+BEGIN
+	SET @tabela = 'samba_enredo'
+END
+ELSE IF(@id_quesito = 7)
+BEGIN
+	SET @tabela = 'mestre_sala_e_porta_bandeira'
+END
+ELSE IF(@id_quesito = 8)
+BEGIN
+	SET @tabela = 'enredo'
+END
+ELSE
+BEGIN
+	RAISERROR('O ID do quesito informado não existe!', 16, 1)
+END
+
+/*
+Verificando em que nota a apuração em um determinado quesito se encontra
+
+OBS: o comando UPDATE não resulta em nada quando não há valores 
+	 previamente inseridos na tabela
+*/
+IF(@contador_nota = 0)
+BEGIN
+	SET @query = 'INSERT INTO ' + @tabela + 
+		'(id_escola, nota1) VALUES(''' + CAST(@id_escola AS VARCHAR(2)) + 
+		''',''' + CAST(@nota AS VARCHAR(7)) + ''')'		
+	/*SET @query = 'UPDATE ' + @tabela + 
+		' SET nota1 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
+        ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''*/
+END
+ELSE IF(@contador_nota = 1)
+BEGIN
+	SET @query = 'UPDATE ' + @tabela + 
+				 ' SET nota2 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+END
+ELSE IF(@contador_nota = 2)
+BEGIN
+	SET @query = 'UPDATE ' + @tabela + 
+				 ' SET nota3 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+END
+ELSE IF(@contador_nota = 3)
+BEGIN
+	SET @query = 'UPDATE ' + @tabela + 
+				 ' SET nota4 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+END
+ELSE IF(@contador_nota = 4)
+BEGIN
+	SET @query = 'UPDATE ' + @tabela + 
+				 ' SET nota5 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+END
+ELSE 
+BEGIN
+	RAISERROR('Notas variam de nota1 à nota5 somente!', 17, 1)
+END
+EXEC(@query)
+
+DROP PROCEDURE sp_deleta
+
+CREATE PROCEDURE sp_deleta(@tabela INT)
+AS 
+DECLARE @contador AS INT, @query AS VARCHAR(MAX)
+IF(@tabela = 1)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM comissao_de_frente)
+	SET @query = 'DELETE FROM comissao_de_frente ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 2)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM evolucao)
+	SET @query = 'DELETE FROM evolucao ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+EXEC(@query)
+
+EXEC sp_deleta 1
+EXEC sp_deleta 2
