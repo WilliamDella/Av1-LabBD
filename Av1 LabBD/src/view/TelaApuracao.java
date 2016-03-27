@@ -287,10 +287,7 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	
 	public static void carregarJurados(){
 		// Pensar em dar um SELECT em uma VIEW?
-		String sql = "SELECT jurado.nome FROM quesito_jurado " +
-				"INNER JOIN jurado " +
-				"ON quesito_jurado.id_jurado = jurado.id_jurado " +
-				"ORDER BY id_quesito, ordem";
+		String sql = "SELECT * FROM view_quesito_jurado";
 		try {
 			PreparedStatement stmt = generic.getConnection().prepareStatement(sql);
 			ResultSet rs = stmt.executeQuery();

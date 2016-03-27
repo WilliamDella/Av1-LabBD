@@ -12,8 +12,8 @@ public class GenericDAO {
 
 		try { 
 			Class.forName("net.sourceforge.jtds.jdbc.Driver");
-			con = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433;DatabaseName=av1_lab_bd","sa","123456");
-//			con = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433;DatabaseName=av1_lab_bd;namedPipe=true","av1","123");
+//			con = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433;DatabaseName=av1_lab_bd","sa","123456");
+			con = DriverManager.getConnection("jdbc:jtds:sqlserver://127.0.0.1:1433;DatabaseName=av1_lab_bd;namedPipe=true","av1","123");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (SQLException e) {

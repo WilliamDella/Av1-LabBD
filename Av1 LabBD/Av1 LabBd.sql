@@ -171,7 +171,7 @@ INSERT INTO quesito_jurado VALUES
 	(9, 44, 3)
 	
 -- Select para agrupar as escolas de samba por quesito e ordenar os jurados pela ordem de julgamento
-SELECT j.nome FROM quesito_jurado qj
+SELECT j.nome FROM quesito_jurado qj 
 INNER JOIN jurado j
 ON qj.id_jurado = j.id_jurado
 ORDER BY id_quesito, ordem
@@ -306,21 +306,53 @@ CREATE TABLE enredo
 	FOREIGN KEY (id_escola) REFERENCES escola_de_samba
 )
 
---DROP PROCEDURE sp_apuracao
-
 /*
 Dois blocos à seguir são para definir quais são a maior e menor notas 
 à serem descartadas
 */
-UPDATE comissao_de_frente
-SET menor_descartada = (select min(valores.menor_valor)
-from
-(select nota1 menor_valor from comissao_de_frente
-union all
-select nota2 menor_valor from comissao_de_frente
-union all
-select nota3 menor_valor from comissao_de_frente) as valores)
-WHERE id_escola = 1
+DROP PROCEDURE sp_calcula_menor
+
+CREATE PROCEDURE sp_calcula_menor(@tabela VARCHAR(30), @id_escola INT)
+AS
+DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
+PRINT(@tabela)
+PRINT(@id_escola)
+
+SET @query2 = '(select min(valores.menor_valor)'
++ ' from(select nota1 menor_valor from ' + @tabela
++ ' union all select nota2 menor_valor from ' + @tabela
++ ' union all select nota3 menor_valor from ' + @tabela
++ ' union all select nota4 menor_valor from ' + @tabela
++ ' union all select nota5 menor_valor from ' + @tabela
+ + ') as valores)'
+
+SET @query = 'UPDATE ' + @tabela + 
+				 ' SET menor_descartada = ' + @query2 +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
+EXECUTE(@query)
+
+CREATE PROCEDURE sp_calcula_maior(@tabela VARCHAR(30), @id_escola INT)
+AS
+DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
+PRINT(@tabela)
+PRINT(@id_escola)
+
+SET @query2 = '(select max(valores.maior_valor)'
++ ' from(select nota1 maior_valor from ' + @tabela
++ ' union all select nota2 maior_valor from ' + @tabela
++ ' union all select nota3 maior_valor from ' + @tabela
++ ' union all select nota4 maior_valor from ' + @tabela
++ ' union all select nota5 maior_valor from ' + @tabela
+ + ') as valores)'
+
+SET @query = 'UPDATE ' + @tabela + 
+				 ' SET maior_descartada = ' + @query2 +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
+EXECUTE(@query)
+
+EXEC sp_calcula_maior 'comissao_de_frente', 1
 
 UPDATE comissao_de_frente
 SET maior_descartada = (select max(valores.menor_valor)
@@ -340,12 +372,16 @@ FROM comissao_de_frente
 INNER JOIN escola_de_samba
 ON comissao_de_frente.id_escola = escola_de_samba.id_escola
 
+DROP PROCEDURE sp_apuracao
+
 CREATE PROCEDURE sp_apuracao (@id_quesito INT, @id_escola INT,
 		 @nota DECIMAL(4,1), @contador_nota INT)
 AS
 DECLARE @menor_descartada AS DECIMAL(4,1), @maior_descartada AS DECIMAL(4,1),
 		@nota_total AS DECIMAL(4,1), @total_de_pontos AS DECIMAL(4,1),
 		@tabela AS VARCHAR(30), @query AS VARCHAR(MAX)
+		
+SET @total_de_pontos = (SELECT total_de_pontos FROM escola_de_samba WHERE id_escola = 1)
 									
 -- Verificando qual o quesito atual
 IF(@id_quesito = 0)
@@ -395,6 +431,7 @@ Verificando em que nota a apuração em um determinado quesito se encontra
 OBS: o comando UPDATE não resulta em nada quando não há valores 
 	 previamente inseridos na tabela
 */
+
 IF(@contador_nota = 0)
 BEGIN
 	SET @query = 'INSERT INTO ' + @tabela + 
@@ -415,6 +452,9 @@ BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota3 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+    -- Chamar as Stored Procedures
+    EXEC sp_calcula_menor @tabela, @id_escola
+    EXEC sp_calcula_maior @tabela, @id_escola
 END
 ELSE IF(@contador_nota = 3)
 BEGIN
@@ -455,3 +495,12 @@ EXEC(@query)
 
 EXEC sp_deleta 1
 EXEC sp_deleta 2
+
+CREATE VIEW view_quesito_jurado
+AS
+SELECT TOP 45 j.nome FROM quesito_jurado qj
+INNER JOIN jurado j
+ON qj.id_jurado = j.id_jurado
+ORDER BY id_quesito, ordem
+
+SELECT * FROM view_quesito_jurado
