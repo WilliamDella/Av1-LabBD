@@ -117,17 +117,20 @@ public class TelaVerTotal extends JFrame {
 	
 	public static void carregaTabelaVerTotal() {		
 		StringBuffer sqlVerTotal = new StringBuffer();
-		sqlVerTotal.append("SELECT * FROM escola_de_samba");		
+		sqlVerTotal.append("SELECT * FROM view_total");
+		sqlVerTotal.append(" ORDER BY total_de_pontos DESC");		
 		try {
 			PreparedStatement stmt = generic.getConnection().prepareStatement(sqlVerTotal.toString());
 			ResultSet rs = stmt.executeQuery();
+			int contador = 1;
 			while (rs.next()) {
 				EscolasDeSamba escola = new EscolasDeSamba();
-				escola.setId_escola(rs.getInt(1));
-				escola.setNome(rs.getString(2));
-				escola.setTotal_de_pontos(rs.getDouble(3));
+				escola.setId_escola(contador);
+				escola.setNome(rs.getString(1));
+				escola.setTotal_de_pontos(rs.getDouble(2));
 				modelo.addRow(new Object[]{new Integer(escola.getId_escola()),
 						new String(escola.getNome()), new Double(escola.getTotal_de_pontos())});
+				contador++;
 			}			
 		} catch (SQLException e) {
 			e.printStackTrace();

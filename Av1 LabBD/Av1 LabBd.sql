@@ -381,6 +381,8 @@ BEGIN
 	/*SET @query = 'UPDATE ' + @tabela + 
 		' SET nota1 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
         ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''*/
+    
+    EXEC(@query)    
 END
 ELSE IF(@contador_nota = 1)
 BEGIN
@@ -388,14 +390,15 @@ BEGIN
 				 ' SET nota2 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
    
-    EXEC sp_calcula_menor @tabela, @id_escola
-    EXEC sp_calcula_maior @tabela, @id_escola
+    EXEC(@query)    
 END
 ELSE IF(@contador_nota = 2)
 BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota3 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+        
+    EXEC(@query)        
                  
     -- Chamar as Stored Procedures
     EXEC sp_calcula_menor @tabela, @id_escola
@@ -406,6 +409,8 @@ BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota4 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+       
+    EXEC(@query)       
                  
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
@@ -415,6 +420,8 @@ BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota5 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+       
+    EXEC(@query)       
                  
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
@@ -423,7 +430,6 @@ ELSE
 BEGIN
 	RAISERROR('Notas variam de nota1 à nota5 somente!', 17, 1)
 END
-EXEC(@query)
 
 /*
 --------------------------------------------------------------------------------------------
@@ -465,7 +471,8 @@ SET @query2 = '(select max(valores.maior_valor)'
 + ' union all select nota2 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
 + ' union all select nota3 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
 + ' union all select nota4 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
-+ ' union all select nota5 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''') as valores)'
++ ' union all select nota5 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ') as valores)'
 
 SET @query = 'UPDATE ' + @tabela + 
 				 ' SET maior_descartada = ' + @query2 +
@@ -532,3 +539,22 @@ EXEC(@query)
 EXEC sp_deleta 1
 EXEC sp_deleta 2
 
+/*
+
+Testes gerais
+
+*/
+
+UPDATE escola_de_samba
+SET total_de_pontos = 10
+WHERE id_escola = 1
+
+DROP VIEW view_total
+
+CREATE VIEW view_total
+AS
+SELECT TOP 100 PERCENT nome, total_de_pontos FROM escola_de_samba
+ORDER BY total_de_pontos
+
+SELECT * FROM view_total
+ORDER BY total_de_pontos DESC
