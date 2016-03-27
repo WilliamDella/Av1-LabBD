@@ -67,8 +67,6 @@ public class TelaVerQuesito extends JFrame {
 		scrollPane.setBounds(6, 56, 1048, 432);
 		contentPane.add(scrollPane);
 		
-		System.out.println(contador);
-		
 		if(contador == 0){
 			for (String coluna : nomesColunas) {
 				modelo.addColumn(coluna);
@@ -85,6 +83,7 @@ public class TelaVerQuesito extends JFrame {
 		
 		tabelaVerQuesitos = new JTable();
 		tabelaVerQuesitos.setModel(modelo);
+		tabelaVerQuesitos.setRowHeight(25);
 		tabelaVerQuesitos.getColumnModel().getColumn(0).setPreferredWidth(150);
 		tabelaVerQuesitos.getColumnModel().getColumn(1).setPreferredWidth(15);
 		tabelaVerQuesitos.getColumnModel().getColumn(2).setPreferredWidth(15);
@@ -116,7 +115,7 @@ public class TelaVerQuesito extends JFrame {
 		sqlVerQuesito.append(" menor_descartada, maior_descartada, nota_total");
 		sqlVerQuesito.append(" FROM " + tabela);
 		sqlVerQuesito.append(" INNER JOIN escola_de_samba");
-		sqlVerQuesito.append(" ON " + tabela + ".id_escola = escola_de_samba.id_escola");
+		sqlVerQuesito.append(" ON " + tabela + ".id_escola = escola_de_samba.id_escola");		
 		try {
 			PreparedStatement stmt = generic.getConnection().prepareStatement(sqlVerQuesito.toString());
 			ResultSet rs = stmt.executeQuery();

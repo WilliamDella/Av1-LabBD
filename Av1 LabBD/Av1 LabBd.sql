@@ -170,6 +170,7 @@ INSERT INTO quesito_jurado VALUES
 	(9, 42, 2),
 	(9, 44, 3)
 	
+-- Código para teste...	
 -- Select para agrupar as escolas de samba por quesito e ordenar os jurados pela ordem de julgamento
 SELECT j.nome FROM quesito_jurado qj 
 INNER JOIN jurado j
@@ -307,70 +308,10 @@ CREATE TABLE enredo
 )
 
 /*
-Dois blocos à seguir são para definir quais são a maior e menor notas 
-à serem descartadas
+-------------------------------------------------------------------------------------------
+A stored procedure sp_apuracao COMEÇA aqui!
+-------------------------------------------------------------------------------------------
 */
-DROP PROCEDURE sp_calcula_menor
-
-CREATE PROCEDURE sp_calcula_menor(@tabela VARCHAR(30), @id_escola INT)
-AS
-DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
-PRINT(@tabela)
-PRINT(@id_escola)
-
-SET @query2 = '(select min(valores.menor_valor)'
-+ ' from(select nota1 menor_valor from ' + @tabela
-+ ' union all select nota2 menor_valor from ' + @tabela
-+ ' union all select nota3 menor_valor from ' + @tabela
-+ ' union all select nota4 menor_valor from ' + @tabela
-+ ' union all select nota5 menor_valor from ' + @tabela
- + ') as valores)'
-
-SET @query = 'UPDATE ' + @tabela + 
-				 ' SET menor_descartada = ' + @query2 +
-                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
-                 
-EXECUTE(@query)
-
-CREATE PROCEDURE sp_calcula_maior(@tabela VARCHAR(30), @id_escola INT)
-AS
-DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
-PRINT(@tabela)
-PRINT(@id_escola)
-
-SET @query2 = '(select max(valores.maior_valor)'
-+ ' from(select nota1 maior_valor from ' + @tabela
-+ ' union all select nota2 maior_valor from ' + @tabela
-+ ' union all select nota3 maior_valor from ' + @tabela
-+ ' union all select nota4 maior_valor from ' + @tabela
-+ ' union all select nota5 maior_valor from ' + @tabela
- + ') as valores)'
-
-SET @query = 'UPDATE ' + @tabela + 
-				 ' SET maior_descartada = ' + @query2 +
-                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
-                 
-EXECUTE(@query)
-
-EXEC sp_calcula_maior 'comissao_de_frente', 1
-
-UPDATE comissao_de_frente
-SET maior_descartada = (select max(valores.menor_valor)
-from
-(select nota1 menor_valor from comissao_de_frente
-union all
-select nota2 menor_valor from comissao_de_frente
-union all
-select nota3 menor_valor from comissao_de_frente) as valores)
-WHERE id_escola = 1
-
-SELECT escola_de_samba.nome, nota1,
-	   nota2, nota3, nota4, nota5,
-	   menor_descartada, maior_descartada,
-	   nota_total
-FROM comissao_de_frente
-INNER JOIN escola_de_samba
-ON comissao_de_frente.id_escola = escola_de_samba.id_escola
 
 DROP PROCEDURE sp_apuracao
 
@@ -446,12 +387,16 @@ BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota2 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+   
+    EXEC sp_calcula_menor @tabela, @id_escola
+    EXEC sp_calcula_maior @tabela, @id_escola
 END
 ELSE IF(@contador_nota = 2)
 BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota3 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
     -- Chamar as Stored Procedures
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
@@ -461,18 +406,109 @@ BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota4 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
+    EXEC sp_calcula_menor @tabela, @id_escola
+    EXEC sp_calcula_maior @tabela, @id_escola
 END
 ELSE IF(@contador_nota = 4)
 BEGIN
 	SET @query = 'UPDATE ' + @tabela + 
 				 ' SET nota5 = ''' + CAST(@nota AS VARCHAR(7)) + '''' +
                  ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
+    EXEC sp_calcula_menor @tabela, @id_escola
+    EXEC sp_calcula_maior @tabela, @id_escola
 END
 ELSE 
 BEGIN
 	RAISERROR('Notas variam de nota1 à nota5 somente!', 17, 1)
 END
 EXEC(@query)
+
+/*
+--------------------------------------------------------------------------------------------
+ A stored procedure sp_apuracao TERMINA AQUI!
+--------------------------------------------------------------------------------------------
+*/
+
+/*
+Duas procedures à seguir são para definir quais são a maior e menor notas 
+à serem descartadas
+*/
+DROP PROCEDURE sp_calcula_menor
+DROP PROCEDURE sp_calcula_maior
+
+CREATE PROCEDURE sp_calcula_menor(@tabela VARCHAR(30), @id_escola INT)
+AS
+DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
+
+SET @query2 = '(select min(valores.menor_valor)'
++ ' from(select nota1 menor_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota2 menor_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota3 menor_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota4 menor_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota5 menor_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ') as valores)'
+
+SET @query = 'UPDATE ' + @tabela + 
+				 ' SET menor_descartada = ' + @query2 +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+                 
+EXECUTE(@query)
+
+CREATE PROCEDURE sp_calcula_maior(@tabela VARCHAR(30), @id_escola INT)
+AS
+DECLARE @query AS VARCHAR(MAX), @query2 AS VARCHAR(MAX)
+
+SET @query2 = '(select max(valores.maior_valor)'
++ ' from (select nota1 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + '''' 
++ ' union all select nota2 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota3 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota4 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
++ ' union all select nota5 maior_valor from ' + @tabela + ' where id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''') as valores)'
+
+SET @query = 'UPDATE ' + @tabela + 
+				 ' SET maior_descartada = ' + @query2 +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+
+EXECUTE(@query)
+
+-- Código para teste...
+
+UPDATE comissao_de_frente
+SET maior_descartada = (select max(valores.maior_valor)
+from
+(select nota1 maior_valor from comissao_de_frente where id_escola = 1
+union all
+select nota2 maior_valor from comissao_de_frente where id_escola = 1
+union all
+select nota3 maior_valor from comissao_de_frente where id_escola = 1) as valores)
+WHERE id_escola = 1
+
+-- Código para teste...
+
+SELECT escola_de_samba.nome, nota1,
+	   nota2, nota3, nota4, nota5,
+	   menor_descartada, maior_descartada,
+	   nota_total
+FROM comissao_de_frente
+INNER JOIN escola_de_samba
+ON comissao_de_frente.id_escola = escola_de_samba.id_escola
+
+CREATE VIEW view_quesito_jurado
+AS
+SELECT TOP 45 j.nome FROM quesito_jurado qj
+INNER JOIN jurado j
+ON qj.id_jurado = j.id_jurado
+ORDER BY id_quesito, ordem
+
+SELECT * FROM view_quesito_jurado
+
+/*
+
+PROCEDURE para apagar os registros das tabelas
+
+*/
 
 DROP PROCEDURE sp_deleta
 
@@ -496,11 +532,3 @@ EXEC(@query)
 EXEC sp_deleta 1
 EXEC sp_deleta 2
 
-CREATE VIEW view_quesito_jurado
-AS
-SELECT TOP 45 j.nome FROM quesito_jurado qj
-INNER JOIN jurado j
-ON qj.id_jurado = j.id_jurado
-ORDER BY id_quesito, ordem
-
-SELECT * FROM view_quesito_jurado

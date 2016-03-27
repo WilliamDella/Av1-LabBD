@@ -50,7 +50,6 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	private static JComboBox<String> cbbxJurados;
 	// Lista que vai conter os dados da tabela quesito_jurado para serem carregados para o ComboBox - cbbxJurados
 	private static List<String> jurados = new ArrayList<String>();
-	// Ainda em avaliação...
 	private JButton btnVerQuesito;
 	private JButton btnVerTotal;
 
@@ -245,7 +244,10 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			tvq.setLocationRelativeTo(null);
 			tvq.setResizable(false);
 		} else if (comando.equals("Ver Total")) {
-			System.out.println("Clicou em ver total, estará pronto logo, logo!");
+			TelaVerTotal tvt = new TelaVerTotal();
+			tvt.setVisible(true);
+			tvt.setLocationRelativeTo(null);
+			tvt.setResizable(false);
 		}
 	}
 	
