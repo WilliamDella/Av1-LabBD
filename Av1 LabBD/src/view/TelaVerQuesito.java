@@ -109,6 +109,20 @@ public class TelaVerQuesito extends JFrame {
 			tabela = "comissao_de_frente";
 		} else if (tabela.equals("Evolução")) {
 			tabela = "evolucao";
+		} else if (tabela.equals("Fantasia")) {
+			tabela = "fantasia";
+		} else if (tabela.equals("Bateria")) {
+			tabela = "bateria";
+		} else if (tabela.equals("Alegoria")) {
+			tabela = "alegoria";
+		} else if (tabela.equals("Harmonia")) {
+			tabela = "harmonia";
+		} else if (tabela.equals("Samba-Enredo")) {
+			tabela = "samba_enredo";
+		} else if (tabela.equals("Mestre-Sala e Porta-Bandeira")) {
+			tabela = "mestre_sala_e_porta_bandeira";
+		} else if (tabela.equals("Enredo")) {
+			tabela = "enredo";
 		}
 		sqlVerQuesito.append("SELECT escola_de_samba.nome, nota1,");
 		sqlVerQuesito.append(" nota2, nota3, nota4, nota5,");
