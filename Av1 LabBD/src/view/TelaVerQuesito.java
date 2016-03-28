@@ -150,6 +150,9 @@ public class TelaVerQuesito extends JFrame {
 						new Double(quesito.getNota5()), new Double(quesito.getMenorDescartada()),
 						new Double(quesito.getMaiorDescartada()), new Double(quesito.getNotaTotal())});
 			}			
+			
+			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -131,7 +131,10 @@ public class TelaVerTotal extends JFrame {
 				modelo.addRow(new Object[]{new Integer(escola.getId_escola()),
 						new String(escola.getNome()), new Double(escola.getTotal_de_pontos())});
 				contador++;
-			}			
+			}	
+			
+			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

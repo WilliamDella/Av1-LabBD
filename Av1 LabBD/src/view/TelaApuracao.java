@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.CallableStatement;
@@ -23,7 +24,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
 import dao.GenericDAO;
-import java.awt.Font;
 
 public class TelaApuracao extends JFrame implements ActionListener {
 
@@ -223,6 +223,8 @@ public class TelaApuracao extends JFrame implements ActionListener {
 						cs.setDouble(3, nota);
 						cs.setInt(4, contador2);
 						cs.execute();
+						
+						cs.close();
 					} catch (SQLException e) {
 						e.printStackTrace();
 					}
@@ -260,6 +262,9 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			while (rs.next()) {
 				escolas.add(rs.getString(1));
 			}
+			
+			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -278,6 +283,9 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			while(rs.next()){
 				quesitos.add(rs.getString(1));
 			}
+			
+			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -297,6 +305,9 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			while(rs.next()){
 				jurados.add(rs.getString(1));
 			}
+			
+			stmt.close();
+			rs.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

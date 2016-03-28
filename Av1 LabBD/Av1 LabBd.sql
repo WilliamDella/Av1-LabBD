@@ -321,8 +321,6 @@ AS
 DECLARE @menor_descartada AS DECIMAL(4,1), @maior_descartada AS DECIMAL(4,1),
 		@nota_total AS DECIMAL(4,1), @total_de_pontos AS DECIMAL(4,1),
 		@tabela AS VARCHAR(30), @query AS VARCHAR(MAX)
-		
-SET @total_de_pontos = (SELECT total_de_pontos FROM escola_de_samba WHERE id_escola = 1)
 									
 -- Verificando qual o quesito atual
 IF(@id_quesito = 0)
@@ -403,6 +401,7 @@ BEGIN
     -- Chamar as Stored Procedures
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
+    EXEC sp_calcula_nota_total @tabela, @id_escola, @contador_nota
 END
 ELSE IF(@contador_nota = 3)
 BEGIN
@@ -414,6 +413,7 @@ BEGIN
                  
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
+    EXEC sp_calcula_nota_total @tabela, @id_escola, @contador_nota
 END
 ELSE IF(@contador_nota = 4)
 BEGIN
@@ -425,6 +425,7 @@ BEGIN
                  
     EXEC sp_calcula_menor @tabela, @id_escola
     EXEC sp_calcula_maior @tabela, @id_escola
+    EXEC sp_calcula_nota_total @tabela, @id_escola, @contador_nota
 END
 ELSE 
 BEGIN
@@ -480,6 +481,49 @@ SET @query = 'UPDATE ' + @tabela +
 
 EXECUTE(@query)
 
+/*
+
+Procedure para o cálculo da nota total
+
+*/
+
+DROP PROCEDURE sp_calcula_nota_total
+
+CREATE PROCEDURE sp_calcula_nota_total(@tabela VARCHAR(30), @id_escola INT, @contador_nota INT)
+AS
+DECLARE @query_nota_total AS VARCHAR(MAX), @query AS VARCHAR(MAX), 
+		@query_total_de_pontos AS VARCHAR(MAX), @query_soma AS VARCHAR(MAX)
+		
+IF(@contador_nota = 2)
+BEGIN
+	SET @query_nota_total = '(SELECT SUM((nota1 + nota2 + nota3) - (menor_descartada + maior_descartada))'
+				  + ' FROM ' + @tabela + ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + '''' + ')'
+END
+ELSE IF(@contador_nota = 3)
+BEGIN
+	SET @query_nota_total = '(SELECT SUM((nota1 + nota2 + nota3 + nota4) - (menor_descartada + maior_descartada))'
+				  + ' FROM ' + @tabela + ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + '''' + ')'
+END
+ELSE IF(@contador_nota = 4)
+BEGIN 
+	SET @query_nota_total = '(SELECT SUM((nota1 + nota2 + nota3 + nota4 + nota5) - (menor_descartada + maior_descartada))'
+			  + ' FROM ' + @tabela + ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + '''' + ')'
+			  
+	SET @query_total_de_pontos = '(SELECT total_de_pontos FROM ' + @tabela + 
+							     ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) +	'''' + ')'
+END
+
+SET @query = 'UPDATE ' + @tabela + 
+				 ' SET nota_total = ' + @query_nota_total +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+ 
+SET @query_soma = 'UPDATE escola_de_samba'+ 
+				 ' SET total_de_pontos = ' + @query_total_de_pontos + ' + ' + @query_nota_total +
+                 ' WHERE id_escola = ''' + CAST(@id_escola AS VARCHAR(2)) + ''''
+             
+EXECUTE(@query)
+EXECUTE(@query_soma)
+
 -- Código para teste...
 
 UPDATE comissao_de_frente
@@ -501,6 +545,16 @@ SELECT escola_de_samba.nome, nota1,
 FROM comissao_de_frente
 INNER JOIN escola_de_samba
 ON comissao_de_frente.id_escola = escola_de_samba.id_escola
+
+EXEC sp_apuracao 0, 1, 9.5, 0
+EXEC sp_apuracao 0, 1, 9.8, 1
+EXEC sp_apuracao 0, 1, 9.8, 2
+EXEC sp_apuracao 0, 1, 9.3, 3
+EXEC sp_apuracao 0, 1, 9.5, 4
+
+UPDATE comissao_de_frente 
+SET nota_total = (SELECT SUM((nota1 + nota2 + nota3) - (menor_descartada + maior_descartada))  FROM comissao_de_frente WHERE id_escola = 1)
+WHERE id_escola = 1
 
 CREATE VIEW view_quesito_jurado
 AS
@@ -546,8 +600,7 @@ Testes gerais
 */
 
 UPDATE escola_de_samba
-SET total_de_pontos = 10
-WHERE id_escola = 1
+SET total_de_pontos = 0
 
 DROP VIEW view_total
 
