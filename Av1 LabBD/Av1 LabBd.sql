@@ -542,7 +542,7 @@ SELECT escola_de_samba.nome, nota1,
 	   nota2, nota3, nota4, nota5,
 	   menor_descartada, maior_descartada,
 	   nota_total
-FROM comissao_de_frente
+FROM comissao_de_frente 
 INNER JOIN escola_de_samba
 ON comissao_de_frente.id_escola = escola_de_samba.id_escola
 
@@ -588,10 +588,59 @@ BEGIN
 	SET @query = 'DELETE FROM evolucao ' +
 			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
 END
+ELSE IF(@tabela = 3)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM fantasia)
+	SET @query = 'DELETE FROM fantasia ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 4)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM bateria)
+	SET @query = 'DELETE FROM bateria ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 5)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM alegoria)
+	SET @query = 'DELETE FROM alegoria ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 6)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM harmonia)
+	SET @query = 'DELETE FROM harmonia ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 7)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM samba_enredo)
+	SET @query = 'DELETE FROM samba_enredo ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 8)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM mestre_sala_e_porta_bandeira)
+	SET @query = 'DELETE FROM mestre_sala_e_porta_bandeira ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
+ELSE IF(@tabela = 9)
+BEGIN
+	SET @contador = (SELECT MAX(id_escola) FROM enredo)
+	SET @query = 'DELETE FROM enredo ' +
+			 'WHERE id_escola = ''' + CAST(@contador AS VARCHAR(2)) + '''' 
+END
 EXEC(@query)
 
 EXEC sp_deleta 1
 EXEC sp_deleta 2
+EXEC sp_deleta 3
+EXEC sp_deleta 4
+EXEC sp_deleta 5
+EXEC sp_deleta 6
+EXEC sp_deleta 7
+EXEC sp_deleta 8
+EXEC sp_deleta 9
 
 /*
 

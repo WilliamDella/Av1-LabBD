@@ -1,16 +1,20 @@
 package view;
 
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
+import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -152,14 +156,22 @@ public class TelaApuracao extends JFrame implements ActionListener {
 		
 		carregarEscolas();
 		carregarJurados();
-		carregarQuesitos();		
+		carregarQuesitos();	
 	}
 
 	public void actionPerformed(ActionEvent evento) {		
 		// Pega o nome do botão que foi pressionado
 		String comando = evento.getActionCommand();
-		// Verifica se o botão inserir foi pressionado
-		if (comando.equals("Inserir")) {
+		// Verifica se o botão inserir foi pressionad                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             o
+		if (comando.equals("Inserir")) {	
+//			Robot robot;
+//			try {
+//				robot = new Robot();
+//				robot.keyPress(KeyEvent.VK_SPACE);          
+//				robot.keyRelease(KeyEvent.VK_SPACE); 
+//			} catch (AWTException e) {
+//				e.printStackTrace();
+//			}
 			double nota = 0;
 			// Verifica se o campo nota está vazio
 			if (txtNota.getText().equals("")) {
@@ -175,7 +187,8 @@ public class TelaApuracao extends JFrame implements ActionListener {
 							"ERRO", JOptionPane.ERROR_MESSAGE);	
 					txtNota.setText("");
 				} else {
-					nota = Double.parseDouble(txtNota.getText());
+//					Random r = new Random();
+//					double nota = (r.nextDouble() * 5) + 5;
 					txtNota.setText("");
 					/*
 					 * Descrição dos contadores:
@@ -187,20 +200,29 @@ public class TelaApuracao extends JFrame implements ActionListener {
 					 * contador5 -> faz o loop do id dos quesitos
 					 */
 					
+					if (contador3 == 9) {
+						contador3 = 8;
+						contador = 13;
+					}
+					
 					contador6++;
 					contador++;					
 					
 					cbbxEscolas.setSelectedIndex(contador);
+					cbbxQuesitos.setSelectedIndex(contador3);
+					
 					if (contador == 13) {
-						contador = - 1;
-						// If que define o término da apuração
-						if (contador == -1 && contador2 == 4 && contador3 == 8) {
-							JOptionPane.showMessageDialog(null, "A apuração acabou!");
-							btnInserir.setEnabled(false);
-						}					
+						contador = -1;											
 					} else if(contador == 0) {							
-						contador4++;					
-						cbbxJurados.setSelectedIndex(contador4);				
+						contador4++;	
+						if (contador4 == 45) {
+							contador4 = 44;
+							contador = 0;
+							if (contador4 == 44) {
+								btnInserir.setEnabled(false);
+								JOptionPane.showMessageDialog(null, "A apuração acabou!");
+							}
+						}
 					}					
 					
 					if (contador5 == 15) {
@@ -208,7 +230,7 @@ public class TelaApuracao extends JFrame implements ActionListener {
 						contador2++;
 					}					
 					
-					// Printa no console a situação atual dos contadores 
+					// Exibe no console a situação atual dos contadores 
 					System.out.println("cont1 = " + contador + " | cont2 = " + contador2 + " | cont3 = " + contador3 + 
 							" | cont4 = " + contador4 + " | cont5 = " + contador5 + " | cont6 = " + contador6);				
 					
@@ -227,12 +249,16 @@ public class TelaApuracao extends JFrame implements ActionListener {
 						cs.close();
 					} catch (SQLException e) {
 						e.printStackTrace();
-					}
+					}							
 					
-					if (contador6 == 70) {
+					cbbxJurados.setSelectedIndex(contador4);
+					
+					if (contador6 == 70) {						
 						contador6 = 0;
 						contador3++;
-						cbbxQuesitos.setSelectedIndex(contador3);
+						if (contador3 < 9) {
+							cbbxQuesitos.setSelectedIndex(contador3);
+						}
 						contador2 = -1;
 					}
 					
@@ -241,7 +267,8 @@ public class TelaApuracao extends JFrame implements ActionListener {
 			}			
 		} else if (comando.equals("Ver Quesito")) {
 			// Cria uma nova janela e configura o título de acordo com o quesito em apuração
-			TelaVerQuesito tvq = new TelaVerQuesito(quesitos.get(contador3).toString());
+			// quesitos.get(contador3).toString()
+			TelaVerQuesito tvq = new TelaVerQuesito(cbbxQuesitos.getSelectedItem().toString());
 			tvq.setVisible(true);
 			tvq.setLocationRelativeTo(null);
 			tvq.setResizable(false);
