@@ -122,13 +122,14 @@ public class TelaVerTotal extends JFrame {
 		try {
 			PreparedStatement stmt = generic.getConnection().prepareStatement(sqlVerTotal.toString());
 			ResultSet rs = stmt.executeQuery();
-			int contador = 1;
+//			int contador = 1;
 			while (rs.next()) {
 				EscolasDeSamba escola = new EscolasDeSamba();
-				escola.setId_escola(contador);
-				escola.setNome(rs.getString(1));
-				escola.setTotal_de_pontos(rs.getDouble(2));
-				modelo.addRow(new Object[]{new Integer(escola.getId_escola()),
+//				escola.setClassificacao_escola(contador);
+				escola.setClassificacao_escola(rs.getInt(1));
+				escola.setNome(rs.getString(2));
+				escola.setTotal_de_pontos(rs.getDouble(3));
+				modelo.addRow(new Object[]{new Integer(escola.getClassificacao_escola()),
 						new String(escola.getNome()), new Double(escola.getTotal_de_pontos())});
 				contador++;
 			}	

@@ -655,7 +655,8 @@ DROP VIEW view_total
 
 CREATE VIEW view_total
 AS
-SELECT TOP 100 PERCENT nome, total_de_pontos FROM escola_de_samba
+SELECT TOP 100 PERCENT ROW_NUMBER() OVER(ORDER BY total_de_pontos DESC) AS classificacao,
+nome, total_de_pontos FROM escola_de_samba
 ORDER BY total_de_pontos
 
 SELECT * FROM view_total

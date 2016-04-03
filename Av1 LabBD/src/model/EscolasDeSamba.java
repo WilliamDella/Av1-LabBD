@@ -2,15 +2,15 @@ package model;
 
 public class EscolasDeSamba {
 
-	private int id_escola;
+	private int classificacao;
 	private String nome;
 	private Double total_de_pontos;
 	
-	public int getId_escola() {
-		return id_escola;
+	public int getClassificacao_escola() {
+		return classificacao;
 	}
-	public void setId_escola(int id_escola) {
-		this.id_escola = id_escola;
+	public void setClassificacao_escola(int classificacao) {
+		this.classificacao = classificacao;
 	}
 	public String getNome() {
 		return nome;

@@ -323,7 +323,6 @@ public class TelaApuracao extends JFrame implements ActionListener {
 	}
 	
 	public static void carregarJurados(){
-		// Pensar em dar um SELECT em uma VIEW?
 		String sql = "SELECT * FROM view_quesito_jurado";
 		try {
 			PreparedStatement stmt = generic.getConnection().prepareStatement(sql);
